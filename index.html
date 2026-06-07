@@ -10,7 +10,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class', // 啟用 class-based 暗黑模式
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -22,7 +22,7 @@
                             600: '#d97706',
                             900: '#78350f',
                         },
-                        // 暗黑模式變數 (預設)
+                        // 暗黑模式變數
                         terminal: {
                             bg: '#0B0F17',
                             card: '#131A26',
@@ -42,7 +42,6 @@
         }
     </script>
     <style>
-        /* 基礎變量設定，用於 JS 抓取或部分原生 CSS */
         :root {
             --bg-color: #0B0F17;
             --card-color: #131A26;
@@ -69,7 +68,6 @@
             transition: background-color 0.3s, color 0.3s;
         }
         
-        /* 動態套用背景與邊框顏色類別 */
         .theme-bg { background-color: var(--bg-color); }
         .theme-card { background-color: var(--card-color); }
         .theme-input { background-color: var(--input-color); }
@@ -77,48 +75,43 @@
         .theme-text { color: var(--text-main); }
         .theme-text-muted { color: var(--text-muted); }
 
-        /* 隱藏滾動條 */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-color);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #f59e0b;
-        }
-        /* 拖曳線條發光效果 */
-        .glow-line-high {
-            filter: drop-shadow(0px 0px 8px rgba(239, 68, 68, 0.6));
-        }
-        .glow-line-low {
-            filter: drop-shadow(0px 0px 8px rgba(59, 130, 246, 0.6));
-        }
-        /* 動態吐司通知 */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+        
+        .glow-line-high { filter: drop-shadow(0px 0px 8px rgba(239, 68, 68, 0.6)); }
+        .glow-line-low { filter: drop-shadow(0px 0px 8px rgba(59, 130, 246, 0.6)); }
+        
         .toast {
             transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
             transform: translateY(100px);
             opacity: 0;
+            pointer-events: none;
         }
         .toast.show {
             transform: translateY(0);
             opacity: 1;
         }
         
-        /* 明亮模式特化陰影 */
         .light-mode .light-shadow {
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+        }
+
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+        .copy-active {
+            animation: pulse-gold 0.5s ease-out;
+            color: #f59e0b !important;
+            border-color: #f59e0b !important;
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col font-sans transition-colors duration-300">
 
-    <!-- 全局頂部導航欄 -->
     <header class="theme-card border-b theme-border sticky top-0 z-50 px-4 py-3 flex flex-wrap items-center justify-between gap-4 transition-colors duration-300">
         <div class="flex items-center gap-3">
             <div class="bg-gradient-to-tr from-gold-600 to-amber-400 p-2 rounded-xl text-white shadow-lg shadow-gold-500/20">
@@ -127,26 +120,22 @@
             <div>
                 <h1 class="text-lg font-bold theme-text tracking-wide flex items-center gap-2">
                     斐波那契黃金終端
-                    <span class="text-xs bg-gold-500/10 text-gold-600 border border-gold-500/30 px-2 py-0.5 rounded-full font-mono">v3.0 PRO</span>
+                    <span class="text-xs bg-gold-500/10 text-gold-600 border border-gold-500/30 px-2 py-0.5 rounded-full font-mono">v4.0 PRO</span>
                 </h1>
                 <p class="text-xs theme-text-muted">專業股市黃金分割與智慧風控系統</p>
             </div>
         </div>
 
-        <!-- 快速偏好設置 -->
         <div class="flex items-center gap-2 sm:gap-3">
-            <!-- 明暗主題切換按鈕 -->
             <button onclick="toggleTheme()" id="themeToggleBtn" class="p-2 theme-input border theme-border rounded-lg theme-text-muted hover:text-gold-500 transition-colors" title="切換明暗主題">
                 <i data-lucide="sun" id="themeIcon" class="w-4 h-4"></i>
             </button>
 
-            <!-- 配色方案切換 (亞洲紅漲綠跌 vs 國際綠漲紅跌) -->
             <button onclick="toggleColorScheme()" id="colorSchemeBtn" class="flex items-center gap-1.5 text-xs theme-input border theme-border px-3 py-2 rounded-lg theme-text-muted hover:theme-text transition">
                 <i data-lucide="palette" class="w-3.5 h-3.5"></i>
                 <span id="colorSchemeLabel" class="hidden sm:inline">亞洲 (紅漲綠跌)</span>
             </button>
 
-            <!-- 多空趨勢快速切換 -->
             <div class="theme-input p-1 rounded-lg border theme-border flex">
                 <button onclick="setTrend('bull')" id="trendBullBtn" class="px-2 sm:px-3 py-1 rounded text-xs font-semibold flex items-center gap-1 transition-all duration-200 bg-red-500/10 text-red-500 border border-red-500/20">
                     <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
@@ -160,7 +149,6 @@
         </div>
     </header>
 
-    <!-- App 核心分頁切換選單 -->
     <nav class="theme-card border-b theme-border px-4 flex gap-1 overflow-x-auto transition-colors duration-300">
         <button onclick="switchTab('terminal')" id="tab-terminal" class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-gold-500 text-gold-500 flex items-center gap-2 whitespace-nowrap">
             <i data-lucide="layout-dashboard" class="w-4 h-4"></i> 📊 實戰終端
@@ -176,56 +164,69 @@
         </button>
     </nav>
 
-    <!-- 主內容區 -->
-    <main class="flex-1 p-4 max-w-7xl w-full mx-auto grid grid-cols-1 gap-6 pb-24">
+    <main class="flex-1 p-4 max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 pb-24">
 
         <!-- ==================== TAB 1: 實戰終端 ==================== -->
-        <section id="view-terminal" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- 左側控制與表格 (5/12) -->
+        <section id="view-terminal" class="col-span-12 grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-5 flex flex-col gap-6">
-                <!-- 價格輸入卡片 -->
+                <!-- 波段參數與標的設定卡片 -->
                 <div class="theme-card border theme-border rounded-2xl p-5 shadow-lg light-shadow transition-colors duration-300">
-                    <div class="flex items-center justify-between mb-4">
+                    <div class="flex flex-wrap items-center justify-between mb-4 gap-2">
                         <h3 class="text-md font-bold theme-text flex items-center gap-2">
                             <i data-lucide="sliders" class="text-gold-500 w-5 h-5"></i>
-                            波段參數設定
+                            標的與參數設定
                         </h3>
-                        <!-- 快速預設 -->
-                        <div class="relative inline-block text-left">
+                        <div class="flex items-center gap-2">
+                            <!-- 一鍵複製戰報按鈕 -->
+                            <button onclick="copyReport()" id="copyBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold theme-input border theme-border theme-text-muted hover:theme-text transition-all duration-300">
+                                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                                <span>複製戰報</span>
+                            </button>
+                            <!-- 快速預設 -->
                             <select onchange="applyPreset(this.value)" class="theme-input border theme-border text-xs rounded-lg px-2.5 py-1.5 theme-text focus:outline-none focus:ring-1 focus:ring-gold-500">
-                                <option value="">⚡ 快速載入熱門波段</option>
-                                <option value="tsmc">台積電 (1000 - 700)</option>
-                                <option value="nvda">輝達 (140 - 95)</option>
-                                <option value="btc">比特幣 (100k - 60k)</option>
-                                <option value="twii">加權指數 (24000 - 19000)</option>
+                                <option value="">⚡ 熱門波段</option>
+                                <option value="tsmc">台積電 (2330)</option>
+                                <option value="nvda">輝達 (NVDA)</option>
+                                <option value="btc">比特幣 (BTC)</option>
+                                <option value="twii">加權指數 (IX0001)</option>
                             </select>
                         </div>
                     </div>
 
-                    <!-- 數字微調控制器 -->
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-4">
+                        <!-- 新增：股票代號/名稱輸入 -->
                         <div class="theme-input bg-opacity-50 p-3 rounded-xl border theme-border">
-                            <label class="text-xs theme-text-muted block mb-1 font-medium">波段最高價 (High)</label>
-                            <div class="flex items-center justify-between gap-1">
-                                <button onclick="stepPrice('inputHigh', -10)" class="w-8 h-8 rounded-lg theme-bg hover:bg-opacity-80 border theme-border theme-text-muted flex items-center justify-center font-bold text-lg transition-colors">-</button>
-                                <input type="number" id="inputHigh" value="1000" step="any" oninput="onPriceInputChange()" class="w-full bg-transparent text-center text-lg font-bold theme-text focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-                                <button onclick="stepPrice('inputHigh', 10)" class="w-8 h-8 rounded-lg theme-bg hover:bg-opacity-80 border theme-border theme-text-muted flex items-center justify-center font-bold text-lg transition-colors">+</button>
+                            <label class="text-xs theme-text-muted block mb-1.5 font-medium">分析標的 (名稱與代號)</label>
+                            <div class="relative">
+                                <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 theme-text-muted"></i>
+                                <input type="text" id="stockNameInput" placeholder="例如：台積電 (2330)" value="台積電 (2330)" oninput="updateStockNameDisplay()" class="w-full bg-transparent text-sm font-bold theme-text focus:outline-none pl-9 pr-3 py-1">
                             </div>
                         </div>
 
-                        <div class="theme-input bg-opacity-50 p-3 rounded-xl border theme-border">
-                            <label class="text-xs theme-text-muted block mb-1 font-medium">波段最低價 (Low)</label>
-                            <div class="flex items-center justify-between gap-1">
-                                <button onclick="stepPrice('inputLow', -10)" class="w-8 h-8 rounded-lg theme-bg hover:bg-opacity-80 border theme-border theme-text-muted flex items-center justify-center font-bold text-lg transition-colors">-</button>
-                                <input type="number" id="inputLow" value="700" step="any" oninput="onPriceInputChange()" class="w-full bg-transparent text-center text-lg font-bold theme-text focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-                                <button onclick="stepPrice('inputLow', 10)" class="w-8 h-8 rounded-lg theme-bg hover:bg-opacity-80 border theme-border theme-text-muted flex items-center justify-center font-bold text-lg transition-colors">+</button>
+                        <!-- 數字微調控制器 -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="theme-input bg-opacity-50 p-3 rounded-xl border theme-border">
+                                <label class="text-xs theme-text-muted block mb-1 font-medium">波段最高價 (High)</label>
+                                <div class="flex items-center justify-between gap-1">
+                                    <button onclick="stepPrice('inputHigh', -10)" class="w-8 h-8 rounded-lg theme-bg hover:bg-opacity-80 border theme-border theme-text-muted flex items-center justify-center font-bold text-lg transition-colors">-</button>
+                                    <input type="number" id="inputHigh" value="1000" step="any" oninput="onPriceInputChange()" class="w-full bg-transparent text-center text-lg font-bold theme-text focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                    <button onclick="stepPrice('inputHigh', 10)" class="w-8 h-8 rounded-lg theme-bg hover:bg-opacity-80 border theme-border theme-text-muted flex items-center justify-center font-bold text-lg transition-colors">+</button>
+                                </div>
+                            </div>
+
+                            <div class="theme-input bg-opacity-50 p-3 rounded-xl border theme-border">
+                                <label class="text-xs theme-text-muted block mb-1 font-medium">波段最低價 (Low)</label>
+                                <div class="flex items-center justify-between gap-1">
+                                    <button onclick="stepPrice('inputLow', -10)" class="w-8 h-8 rounded-lg theme-bg hover:bg-opacity-80 border theme-border theme-text-muted flex items-center justify-center font-bold text-lg transition-colors">-</button>
+                                    <input type="number" id="inputLow" value="700" step="any" oninput="onPriceInputChange()" class="w-full bg-transparent text-center text-lg font-bold theme-text focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                    <button onclick="stepPrice('inputLow', 10)" class="w-8 h-8 rounded-lg theme-bg hover:bg-opacity-80 border theme-border theme-text-muted flex items-center justify-center font-bold text-lg transition-colors">+</button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 波段寬度資訊 -->
                     <div class="mt-4 flex justify-between items-center theme-input px-4 py-2.5 rounded-xl border theme-border text-xs theme-text-muted font-medium">
-                        <span>目前波段總空間：<strong class="theme-text font-mono text-sm" id="waveSpan">300.00</strong> 元</span>
+                        <span>目前波段總空間：<strong class="theme-text font-mono text-sm" id="waveSpan">300.00</strong></span>
                         <span id="wavePercent" class="font-mono text-red-500 font-bold">+42.86%</span>
                     </div>
                 </div>
@@ -258,12 +259,15 @@
 
             <!-- 右側互動視覺圖表 (7/12) -->
             <div class="lg:col-span-7 flex flex-col gap-4">
-                <div class="theme-card border theme-border rounded-2xl p-5 flex flex-col h-[520px] shadow-lg light-shadow transition-colors duration-300 relative">
-                    <!-- 圖表頂部 -->
+                <div class="theme-card border theme-border rounded-2xl p-5 flex flex-col h-[520px] lg:h-full shadow-lg light-shadow transition-colors duration-300 relative">
                     <div class="flex flex-wrap gap-2 items-center justify-between mb-4">
                         <div class="flex items-center gap-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-gold-500 animate-ping"></span>
-                            <h4 class="font-bold theme-text text-md">動態交互主動式 K 線圖</h4>
+                            <!-- 動態股票名稱標題 -->
+                            <h4 class="font-bold theme-text text-md flex items-center gap-2">
+                                <span id="chartTitleStockName" class="text-gold-500">台積電 (2330)</span>
+                                <span class="text-sm font-normal theme-text-muted">動態交互 K 線圖</span>
+                            </h4>
                         </div>
                         <div class="text-xs theme-text-muted flex items-center gap-3 font-medium">
                             <span class="flex items-center gap-1"><span class="w-3 h-0.5 bg-red-500 inline-block"></span> 最高線</span>
@@ -271,24 +275,17 @@
                         </div>
                     </div>
 
-                    <!-- SVG 畫布區域 -->
                     <div class="flex-1 w-full theme-bg rounded-xl border theme-border overflow-hidden relative cursor-ns-resize transition-colors duration-300" id="svgContainer">
                         <svg id="interactiveSvg" class="w-full h-full">
-                            <!-- 背景網格線 -->
                             <g id="svgGrid"></g>
-                            <!-- 背景模擬 K 線圖 -->
                             <g id="svgCandles"></g>
-                            <!-- 斐波那契基準線 -->
                             <g id="svgFibLines"></g>
-                            <!-- 滑動控制線 (High & Low) -->
                             <line id="dragLineHigh" class="stroke-red-500 stroke-[3] hover:stroke-[5] cursor-ns-resize transition-all glow-line-high" x1="0" y1="0" x2="100%" y2="0" />
                             <line id="dragLineLow" class="stroke-blue-500 stroke-[3] hover:stroke-[5] cursor-ns-resize transition-all glow-line-low" x1="0" y1="0" x2="100%" y2="0" />
-                            <!-- 數值標籤 -->
                             <g id="svgLabels"></g>
                         </svg>
                     </div>
 
-                    <!-- 提示引導 -->
                     <div class="mt-3 text-center text-xs theme-text-muted flex items-center justify-center gap-1 font-medium">
                         <i data-lucide="info" class="w-3.5 h-3.5 text-gold-500"></i>
                         可在圖表上直接拖曳紅色與藍色粗線，即時微調最高與最低價！
@@ -297,10 +294,8 @@
             </div>
         </section>
 
-
         <!-- ==================== TAB 2: 精算風控 ==================== -->
-        <section id="view-risk" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- 左側風控輸入與核心指標 -->
+        <section id="view-risk" class="hidden col-span-12 grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-5 flex flex-col gap-6">
                 <div class="theme-card border theme-border rounded-2xl p-6 shadow-lg light-shadow transition-colors duration-300">
                     <h3 class="text-md font-bold theme-text mb-4 flex items-center gap-2">
@@ -309,7 +304,6 @@
                     </h3>
                     
                     <div class="space-y-5">
-                        <!-- 總資金 -->
                         <div>
                             <label class="text-xs theme-text-muted block mb-1.5 font-medium">可用總資金 (Account Balance)</label>
                             <div class="relative">
@@ -318,7 +312,6 @@
                             </div>
                         </div>
 
-                        <!-- 預估承擔風險 % -->
                         <div>
                             <div class="flex justify-between items-center mb-2">
                                 <label class="text-xs theme-text-muted font-medium">單筆願意承擔最大風險 %</label>
@@ -333,26 +326,20 @@
                             </div>
                         </div>
 
-                        <!-- 實際進場價 -->
                         <div>
                             <label class="text-xs theme-text-muted block mb-1.5 font-medium">預計進場價 (Entry Price)</label>
                             <input type="number" id="riskEntry" value="815" oninput="calculateRisk()" class="w-full theme-input border theme-border theme-text text-lg font-bold rounded-xl px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-gold-500 transition-colors">
                         </div>
 
-                        <!-- 停損、停利快速選擇器 -->
                         <div class="grid grid-cols-2 gap-4 pt-2 border-t theme-border mt-2">
                             <div class="pt-2">
                                 <label class="text-xs theme-text-muted block mb-2 font-bold">🛑 停損點 (一鍵帶入)</label>
-                                <div class="grid grid-cols-2 gap-2" id="slButtons">
-                                    <!-- 動態按鈕 -->
-                                </div>
+                                <div class="grid grid-cols-2 gap-2" id="slButtons"></div>
                                 <input type="number" id="riskStopLoss" value="700" oninput="calculateRisk()" class="w-full mt-2 theme-input border theme-border theme-text text-sm font-bold rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gold-500 text-center transition-colors">
                             </div>
                             <div class="pt-2">
                                 <label class="text-xs theme-text-muted block mb-2 font-bold">🎯 停利點 (一鍵帶入)</label>
-                                <div class="grid grid-cols-2 gap-2" id="tpButtons">
-                                    <!-- 動態按鈕 -->
-                                </div>
+                                <div class="grid grid-cols-2 gap-2" id="tpButtons"></div>
                                 <input type="number" id="riskTakeProfit" value="1000" oninput="calculateRisk()" class="w-full mt-2 theme-input border theme-border theme-text text-sm font-bold rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gold-500 text-center transition-colors">
                             </div>
                         </div>
@@ -360,11 +347,8 @@
                 </div>
             </div>
 
-            <!-- 右側部位計算結果 -->
             <div class="lg:col-span-7 flex flex-col gap-6">
-                <!-- 大張結果顯示板 -->
-                <div class="theme-card border theme-border rounded-2xl p-6 shadow-lg light-shadow relative overflow-hidden transition-colors duration-300">
-                    <!-- 裝飾光暈 -->
+                <div class="theme-card border theme-border rounded-2xl p-6 shadow-lg light-shadow relative overflow-hidden transition-colors duration-300 h-full">
                     <div class="absolute -right-16 -top-16 w-48 h-48 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
                     
                     <h3 class="text-md font-bold theme-text mb-5 flex items-center gap-2">
@@ -373,7 +357,6 @@
                     </h3>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                        <!-- 建議建倉股數 -->
                         <div class="theme-input p-5 rounded-xl border theme-border relative transition-colors duration-300">
                             <span class="text-xs theme-text-muted block mb-1 font-medium">最佳建倉規模</span>
                             <div class="flex items-baseline gap-2 mt-1">
@@ -383,7 +366,6 @@
                             <span class="text-xs font-semibold theme-text block mt-2" id="calcLots">約 0.0 張 (台股基準)</span>
                         </div>
 
-                        <!-- 盈虧比 -->
                         <div class="theme-input p-5 rounded-xl border theme-border relative transition-colors duration-300">
                             <span class="text-xs theme-text-muted block mb-1 font-medium">交易盈虧比 (R:R Ratio)</span>
                             <div class="flex items-baseline gap-2 mt-1">
@@ -392,14 +374,12 @@
                             <span class="text-xs font-bold theme-text-muted block mt-2" id="calcRRStatus">盈虧比大於 2:1 方為優質交易</span>
                         </div>
 
-                        <!-- 最大允許虧損 -->
                         <div class="theme-input bg-opacity-60 p-4 rounded-xl border theme-border transition-colors duration-300">
                             <span class="text-xs theme-text-muted block mb-1 font-medium">最大可承擔風險額度</span>
                             <span class="text-xl font-bold text-red-500 font-mono" id="calcMaxRiskAmt">$0</span>
                             <span class="text-[11px] theme-text-muted block mt-1">此為觸發停損時的預計實質虧損</span>
                         </div>
 
-                        <!-- 預估盈虧金客 -->
                         <div class="theme-input bg-opacity-60 p-4 rounded-xl border theme-border transition-colors duration-300">
                             <span class="text-xs theme-text-muted block mb-1 font-medium">預估獲利金額 (止盈達標)</span>
                             <span class="text-xl font-bold text-green-500 font-mono" id="calcEstProfit">$0</span>
@@ -407,7 +387,6 @@
                         </div>
                     </div>
 
-                    <!-- 資金利用率警示 -->
                     <div class="mt-6 p-4 rounded-xl border flex items-start gap-3 bg-opacity-30 transition-colors duration-300" id="utilizationAlert">
                         <i data-lucide="alert-circle" class="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-500"></i>
                         <div class="text-xs">
@@ -419,9 +398,8 @@
             </div>
         </section>
 
-
         <!-- ==================== TAB 3: 我的存檔 ==================== -->
-        <section id="view-watchlist" class="hidden flex flex-col gap-6">
+        <section id="view-watchlist" class="hidden col-span-12 flex flex-col gap-6">
             <div class="theme-card border theme-border rounded-2xl p-6 shadow-lg light-shadow transition-colors duration-300">
                 <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
                     <div>
@@ -432,8 +410,8 @@
                         <p class="text-xs theme-text-muted mt-1 font-medium">保存計算結果至本地快取記憶體，以便隨時載入分析</p>
                     </div>
 
-                    <!-- 新建存檔表單 -->
                     <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+                        <!-- 存檔名稱預設連動上方輸入的股票名稱 -->
                         <input type="text" id="watchName" placeholder="輸入股名/波段名" class="theme-input border theme-border theme-text text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-1 focus:ring-gold-500 flex-1 md:min-w-[200px]">
                         <input type="text" id="watchMemo" placeholder="選填備註" class="theme-input border theme-border theme-text text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-1 focus:ring-gold-500 flex-1 md:min-w-[140px]">
                         <button onclick="saveToWatchlist()" class="bg-gold-500 hover:bg-gold-600 text-white font-bold px-4 py-2 rounded-xl text-sm flex items-center justify-center gap-1.5 transition w-full md:w-auto shadow-md shadow-gold-500/20">
@@ -442,13 +420,12 @@
                     </div>
                 </div>
 
-                <!-- 存檔清單表格 -->
                 <div class="border theme-border rounded-xl overflow-hidden theme-input bg-opacity-30 transition-colors duration-300">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm whitespace-nowrap">
                             <thead class="theme-input bg-opacity-80 text-xs theme-text-muted uppercase font-semibold">
                                 <tr>
-                                    <th class="py-3 px-4">名稱/標記</th>
+                                    <th class="py-3 px-4">標的名稱</th>
                                     <th class="py-3 px-4">波段高低價</th>
                                     <th class="py-3 px-4">方向</th>
                                     <th class="py-3 px-4">備註說明</th>
@@ -464,10 +441,8 @@
             </div>
         </section>
 
-
         <!-- ==================== TAB 4: 黃金螺旋與教學 ==================== -->
-        <section id="view-education" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- 左側：黃金分割比例數學大美 -->
+        <section id="view-education" class="hidden col-span-12 grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-5 flex flex-col gap-6">
                 <div class="theme-card border theme-border rounded-2xl p-6 flex flex-col justify-between h-[480px] shadow-lg light-shadow transition-colors duration-300">
                     <div>
@@ -478,10 +453,9 @@
                         <p class="text-xs theme-text-muted mt-2 font-medium leading-relaxed">源自於大自然的完美比例 $1.618$。在金融市場中，它代表著大眾心理與市場結構的完美共振。</p>
                     </div>
 
-                    <!-- 互動 SVG 繪製黃金螺旋 -->
                     <div class="flex-1 w-full flex items-center justify-center p-4">
                         <svg viewBox="0 0 400 250" class="w-full max-w-sm" id="spiralSvg">
-                            <!-- 斐波那契螺旋線由 JS 計算並插入 -->
+                            <!-- JS 生成 -->
                         </svg>
                     </div>
                     
@@ -491,7 +465,6 @@
                 </div>
             </div>
 
-            <!-- 右側：深度實戰教學手冊 -->
             <div class="lg:col-span-7 flex flex-col gap-6">
                 <div class="theme-card border theme-border rounded-2xl p-6 shadow-lg light-shadow transition-colors duration-300">
                     <h3 class="text-md font-bold theme-text mb-5 flex items-center gap-2">
@@ -500,7 +473,6 @@
                     </h3>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- 策略一 -->
                         <div class="theme-input bg-opacity-50 p-5 rounded-xl border theme-border transition-colors duration-300">
                             <h4 class="text-sm font-bold text-red-500 flex items-center gap-1.5 mb-2.5">
                                 <span class="w-2 h-2 rounded-full bg-red-500"></span>
@@ -511,7 +483,6 @@
                             </p>
                         </div>
 
-                        <!-- 策略二 -->
                         <div class="theme-input bg-opacity-50 p-5 rounded-xl border theme-border transition-colors duration-300">
                             <h4 class="text-sm font-bold text-amber-500 flex items-center gap-1.5 mb-2.5">
                                 <span class="w-2 h-2 rounded-full bg-amber-500"></span>
@@ -522,7 +493,6 @@
                             </p>
                         </div>
 
-                        <!-- 策略三 -->
                         <div class="theme-input bg-opacity-50 p-5 rounded-xl border theme-border transition-colors duration-300">
                             <h4 class="text-sm font-bold text-blue-500 flex items-center gap-1.5 mb-2.5">
                                 <span class="w-2 h-2 rounded-full bg-blue-500"></span>
@@ -533,7 +503,6 @@
                             </p>
                         </div>
 
-                        <!-- 策略四 -->
                         <div class="theme-input bg-opacity-50 p-5 rounded-xl border theme-border transition-colors duration-300">
                             <h4 class="text-sm font-bold text-purple-500 flex items-center gap-1.5 mb-2.5">
                                 <span class="w-2 h-2 rounded-full bg-purple-500"></span>
@@ -556,73 +525,152 @@
         <span id="toastMsg">成功載入點位！</span>
     </div>
 
-    <!-- 全局 JS 腳本 -->
     <script>
-        // 核心狀態
         let currentTab = 'terminal';
         let currentTrend = 'bull'; 
         let colorScheme = 'asia';  
-        let isLightMode = false; // 明暗主題狀態
+        let isLightMode = false; 
+        
+        // 新增：儲存目前標的名稱
+        let currentStockName = "台積電 (2330)"; 
         
         let priceHigh = 1000;
         let priceLow = 700;
+        let calculatedDataCache = []; 
 
-        // 斐波那契重要比例定義
         const fibRatios = [
-            { val: 0.000, label: '0.0% (起點)', desc: '波段最高點，多頭修正的起跑線', isKey: false },
-            { val: 0.236, label: '23.6% 回檔', desc: '極強勢股淺幅修正，通常當日消化賣壓', isKey: false },
-            { val: 0.382, label: '38.2% 回檔', desc: '強勢股波段回調區，極具參考價值的買點', isKey: true },
-            { val: 0.500, label: '50.0% 分界', desc: '整數與多空心理防禦線，多頭支撐帶', isKey: false },
-            { val: 0.618, label: '61.8% 生死線', desc: '極限防禦區，跌破此線代表波段多頭告終', isKey: true },
-            { val: 1.000, label: '100% (極限)', desc: '波段起漲點，若跌回此處將進入箱型整理', isKey: false }
+            { val: 0.000, label: '0.0%', desc: '波段最高點，多頭修正的起跑線', isKey: false },
+            { val: 0.236, label: '23.6%', desc: '極強勢股淺幅修正，通常當日消化賣壓', isKey: false },
+            { val: 0.382, label: '38.2%', desc: '強勢股波段回調區，極具參考價值的買點', isKey: true },
+            { val: 0.500, label: '50.0%', desc: '整數與多空心理防禦線，多頭支撐帶', isKey: false },
+            { val: 0.618, label: '61.8%', desc: '極限防禦區，跌破此線代表波段多頭告終', isKey: true },
+            { val: 1.000, label: '100%', desc: '波段起漲點，若跌回此處將進入箱型整理', isKey: false }
         ];
 
-        // 頁面加載完成初始化
         window.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             
-            // 讀取系統偏好或上次設定的主題
             if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
-                toggleTheme(true); // 強制切換到 Light Mode
+                toggleTheme(true); 
             }
 
-            // 初始化自訂儲存清單到 localStorage
             if (!localStorage.getItem('fib_watchlist')) {
                 const sampleList = [
-                    { id: '1', name: '台積電2026拉回波', high: 1050, low: 880, trend: 'bull', memo: '主力法說會前護盤', time: '2026/06/01' },
-                    { id: '2', name: '輝達強勢整理帶', high: 142, low: 108, trend: 'bull', memo: 'AI出貨整理', time: '2026/06/05' }
+                    { id: '1', name: '台積電 (2330)', high: 1050, low: 880, trend: 'bull', memo: '主力法說會前護盤', time: '2026/06/01' }
                 ];
                 localStorage.setItem('fib_watchlist', JSON.stringify(sampleList));
             }
 
+            // 初始化時連動存檔名稱
+            updateStockNameDisplay();
+            
             calculate();
             drawGoldenSpiral();
             renderWatchlist();
             setupInteractiveDrag();
         });
 
-        // ==================== 主題切換 (Light/Dark Mode) ====================
+        // ==================== 股票名稱更新與連動 ====================
+        function updateStockNameDisplay() {
+            const inputVal = document.getElementById('stockNameInput').value.trim();
+            currentStockName = inputVal || "未命名標的";
+            
+            // 更新圖表標題
+            document.getElementById('chartTitleStockName').innerText = currentStockName;
+            
+            // 自動帶入到「我的存檔」的預設名稱中
+            const watchNameInput = document.getElementById('watchName');
+            // 如果存檔名稱目前是空的，或者與上一次的標的名稱相同，就自動更新它
+            if (!watchNameInput.value || watchNameInput.dataset.autoSynced === 'true') {
+                watchNameInput.value = currentStockName;
+                watchNameInput.dataset.autoSynced = 'true';
+            }
+        }
+        
+        // 監聽存檔名稱手動修改，取消自動同步
+        document.getElementById('watchName').addEventListener('input', function() {
+            this.dataset.autoSynced = 'false';
+        });
+
+        // 格式化日期時間
+        function getFormattedDateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const date = String(now.getDate()).padStart(2, '0');
+            const days = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+            const dayName = days[now.getDay()];
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            return `${year}.${month}.${date}（${dayName}）${hours}：${minutes}`;
+        }
+
+        // ==================== 複製戰報功能 (含股票名稱) ====================
+        function copyReport() {
+            const btn = document.getElementById('copyBtn');
+            const directionText = currentTrend === 'bull' ? '📈 多頭回檔 (找支撐)' : '📉 空頭反彈 (找壓力)';
+            const diff = (priceHigh - priceLow).toFixed(2);
+            
+            let reportText = `📊 【斐波那契波段戰報】\n`;
+            reportText += `🕒 產出時間：${getFormattedDateTime()}\n`;
+            reportText += `------------------------\n`;
+            reportText += `🏦 分析標的：${currentStockName}\n`;
+            reportText += `📌 趨勢方向：${directionText}\n`;
+            reportText += `🔺 波段高點：${priceHigh.toFixed(2)}\n`;
+            reportText += `🔻 波段低點：${priceLow.toFixed(2)}\n`;
+            reportText += `📏 波段空間：${diff}\n`;
+            reportText += `------------------------\n`;
+            reportText += `🎯 關鍵點位分析：\n`;
+
+            calculatedDataCache.forEach(item => {
+                const icon = item.isKey ? '⭐ ' : '🔸 ';
+                reportText += `${icon}${item.label.padEnd(6, ' ')} : ${item.price.toFixed(2)}\n`;
+            });
+            reportText += `------------------------\n`;
+            reportText += `💡 備註：0.382為強勢買/賣點，0.618為終極生死線。`;
+
+            const textArea = document.createElement("textarea");
+            textArea.value = reportText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                btn.classList.add('copy-active');
+                btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5"></i><span>已複製!</span>`;
+                lucide.createIcons();
+                showNotification("📋 戰報已成功複製到剪貼簿！");
+                
+                setTimeout(() => {
+                    btn.classList.remove('copy-active');
+                    btn.innerHTML = `<i data-lucide="copy" class="w-3.5 h-3.5"></i><span>複製戰報</span>`;
+                    lucide.createIcons();
+                }, 2000);
+            } catch (err) {
+                showNotification("❌ 複製失敗，請手動圈選複製。");
+            } finally {
+                document.body.removeChild(textArea);
+            }
+        }
+
         function toggleTheme(forceLight = false) {
             const body = document.body;
             const icon = document.getElementById('themeIcon');
             
             if (forceLight || !isLightMode) {
-                // 切換到明亮模式
                 body.classList.add('light-mode');
                 icon.setAttribute('data-lucide', 'moon');
                 isLightMode = true;
                 localStorage.setItem('theme', 'light');
             } else {
-                // 切換到暗黑模式
                 body.classList.remove('light-mode');
                 icon.setAttribute('data-lucide', 'sun');
                 isLightMode = false;
                 localStorage.setItem('theme', 'dark');
             }
             
-            lucide.createIcons(); // 重新渲染 icon
-            
-            // 重新繪製 SVG 以適應新配色
+            lucide.createIcons(); 
             calculate();
             drawGoldenSpiral();
             
@@ -631,7 +679,6 @@
             }
         }
 
-        // 顯示通知
         function showNotification(msg) {
             const toast = document.getElementById('toast');
             document.getElementById('toastMsg').innerText = msg;
@@ -641,19 +688,17 @@
             }, 2500);
         }
 
-        // 分頁切換
         function switchTab(tabId) {
             currentTab = tabId;
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('border-gold-500', 'text-gold-500');
                 btn.classList.add('border-transparent');
-                btn.classList.replace('theme-text', 'theme-text-muted'); // 針對已啟用的選項恢復樣式
+                btn.classList.replace('theme-text', 'theme-text-muted'); 
             });
             const activeBtn = document.getElementById(`tab-${tabId}`);
             activeBtn.classList.add('border-gold-500', 'text-gold-500');
             activeBtn.classList.remove('border-transparent', 'theme-text-muted');
             
-            // 隱藏/顯示視圖
             document.getElementById('view-terminal').classList.add('hidden');
             document.getElementById('view-risk').classList.add('hidden');
             document.getElementById('view-watchlist').classList.add('hidden');
@@ -661,12 +706,10 @@
 
             document.getElementById(`view-${tabId}`).classList.remove('hidden');
 
-            // 重新計算或繪圖
             if (tabId === 'risk') calculateRisk();
             if (tabId === 'education') drawGoldenSpiral();
         }
 
-        // 微調價格
         function stepPrice(inputId, val) {
             const input = document.getElementById(inputId);
             let curVal = parseFloat(input.value) || 0;
@@ -674,7 +717,6 @@
             onPriceInputChange();
         }
 
-        // 當輸入框內容手動變更時
         function onPriceInputChange() {
             priceHigh = parseFloat(document.getElementById('inputHigh').value) || 0;
             priceLow = parseFloat(document.getElementById('inputLow').value) || 0;
@@ -685,13 +727,10 @@
                 priceLow = temp;
                 document.getElementById('inputHigh').value = priceHigh;
                 document.getElementById('inputLow').value = priceLow;
-                showNotification("高低價已自動排序優化");
             }
-
             calculate();
         }
 
-        // 切換趨勢
         function setTrend(trend) {
             currentTrend = trend;
             const bullBtn = document.getElementById('trendBullBtn');
@@ -711,35 +750,44 @@
             calculate();
         }
 
-        // 切換紅綠配色方案
         function toggleColorScheme() {
             colorScheme = colorScheme === 'asia' ? 'global' : 'asia';
             const label = document.getElementById('colorSchemeLabel');
-            
-            if (colorScheme === 'asia') {
-                label.innerText = '亞洲 (紅漲綠跌)';
-            } else {
-                label.innerText = '國際 (綠漲紅跌)';
-            }
+            label.innerText = colorScheme === 'asia' ? '亞洲 (紅漲綠跌)' : '國際 (綠漲紅跌)';
             calculate();
-            showNotification("配色方案已套用");
         }
 
-        // 載入內建預設
+        // ==================== 載入預設波段與名稱 ====================
         function applyPreset(stock) {
             if (!stock) return;
-            if (stock === 'tsmc') { priceHigh = 1000; priceLow = 700; currentTrend = 'bull'; }
-            else if (stock === 'nvda') { priceHigh = 142; priceLow = 95; currentTrend = 'bull'; }
-            else if (stock === 'btc') { priceHigh = 100000; priceLow = 60000; currentTrend = 'bull'; }
-            else if (stock === 'twii') { priceHigh = 24000; priceLow = 19000; currentTrend = 'bull'; }
+            
+            const stockInput = document.getElementById('stockNameInput');
+            
+            if (stock === 'tsmc') { 
+                priceHigh = 1000; priceLow = 700; currentTrend = 'bull'; 
+                stockInput.value = "台積電 (2330)";
+            }
+            else if (stock === 'nvda') { 
+                priceHigh = 142; priceLow = 95; currentTrend = 'bull'; 
+                stockInput.value = "輝達 (NVDA)";
+            }
+            else if (stock === 'btc') { 
+                priceHigh = 100000; priceLow = 60000; currentTrend = 'bull'; 
+                stockInput.value = "比特幣 (BTC)";
+            }
+            else if (stock === 'twii') { 
+                priceHigh = 24000; priceLow = 19000; currentTrend = 'bull'; 
+                stockInput.value = "加權指數 (IX0001)";
+            }
             
             document.getElementById('inputHigh').value = priceHigh;
             document.getElementById('inputLow').value = priceLow;
+            
+            updateStockNameDisplay(); // 更新標題與存檔預設名稱
             setTrend(currentTrend);
-            showNotification(`已套用 ${stock.toUpperCase()} 波段設定`);
+            showNotification(`已套用 ${stockInput.value} 參數`);
         }
 
-        // 核心計算引擎
         function calculate() {
             const pct = ((priceHigh - priceLow) / priceLow) * 100;
             document.getElementById('waveSpan').innerText = (priceHigh - priceLow).toFixed(2);
@@ -753,7 +801,7 @@
 
             const tableBody = document.getElementById('terminalTableBody');
             tableBody.innerHTML = '';
-            const calculatedLevels = [];
+            calculatedDataCache = []; 
 
             fibRatios.forEach(ratio => {
                 let targetPrice;
@@ -763,13 +811,14 @@
                     targetPrice = priceLow + (priceHigh - priceLow) * ratio.val;
                 }
 
-                calculatedLevels.push({
+                const itemData = {
                     ratio: ratio.val,
                     label: ratio.label,
                     price: targetPrice,
                     isKey: ratio.isKey,
                     desc: ratio.desc
-                });
+                };
+                calculatedDataCache.push(itemData); 
 
                 const tr = document.createElement('tr');
                 tr.className = `hover:bg-[var(--border-color)] transition-colors ${ratio.isKey ? (isLightMode ? 'bg-gold-50' : 'bg-gold-500/5') : ''}`;
@@ -794,11 +843,10 @@
                 tableBody.appendChild(tr);
             });
 
-            updateSvgChart(calculatedLevels);
-            renderRiskButtons(calculatedLevels);
+            updateSvgChart(calculatedDataCache);
+            renderRiskButtons(calculatedDataCache);
         }
 
-        // ==================== SVG 圖表動態繪製 ====================
         function updateSvgChart(levels) {
             const svgContainer = document.getElementById('svgContainer');
             const width = svgContainer.clientWidth || 600;
@@ -817,7 +865,6 @@
                 return height - 50 - ratio * graphHeight;
             }
 
-            // --- 網格線 (因應 Light/Dark 調整透明度) ---
             const gridColor = isLightMode ? '#E2E8F0' : '#2A3649';
             for (let i = 1; i < 5; i++) {
                 const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -828,12 +875,10 @@
                 gridG.appendChild(line);
             }
 
-            // --- 背景 K 線 ---
-            const candleCount = 16; // 增加 K 線數量讓畫面更豐富
+            const candleCount = 16; 
             let upColor = colorScheme === 'asia' ? '#EF4444' : '#22C55E';
             let downColor = colorScheme === 'asia' ? '#22C55E' : '#EF4444';
             
-            // 明亮模式下 K線顏色稍微加深增加對比
             if (isLightMode) {
                 upColor = colorScheme === 'asia' ? '#DC2626' : '#16A34A';
                 downColor = colorScheme === 'asia' ? '#16A34A' : '#DC2626';
@@ -879,7 +924,6 @@
                 candlesG.appendChild(rect);
             }
 
-            // --- 基準線與標籤 ---
             const lineColor = isLightMode ? '#CBD5E1' : '#2A3649';
             const textColor = isLightMode ? '#64748B' : '#94a3b8';
             const keyColor = isLightMode ? '#D97706' : '#fbbf24';
@@ -911,7 +955,6 @@
             dLineLow.setAttribute('y1', getPriceY(priceLow)); dLineLow.setAttribute('y2', getPriceY(priceLow));
         }
 
-        // ==================== 互動拖曳處理邏輯 ====================
         let activeDrag = null;
 
         function setupInteractiveDrag() {
@@ -967,7 +1010,6 @@
             window.addEventListener('touchend', onPointerUp);
         }
 
-        // ==================== TAB 2: 風控與建倉邏輯 ====================
         function renderRiskButtons(levels) {
             const slG = document.getElementById('slButtons');
             const tpG = document.getElementById('tpButtons');
@@ -1049,7 +1091,6 @@
             const estProfitEl = document.getElementById('calcEstProfit');
             estProfitEl.innerText = `$${Math.round(Math.abs(estProfit)).toLocaleString()}`;
             
-            // 判斷方向是否正確 (獲利為正)
             let isProfitable = false;
             if (currentTrend === 'bull' && takeProfit > entry) isProfitable = true;
             if (currentTrend === 'bear' && takeProfit < entry) isProfitable = true;
@@ -1069,7 +1110,7 @@
             if (capPercent > 100) {
                 alertBox.className = "mt-6 p-4 rounded-xl border flex items-start gap-3 bg-red-500/10 border-red-500/30 transition-colors duration-300";
                 alertBox.querySelector('h5').className = "font-bold text-red-500 mb-1 text-sm";
-                alertBox.querySelector('p').innerHTML = "注意！預計總成本已<strong>超出總資金規模</strong>。建議改用槓桿衍生品（如融資、期貨）或重新精算停損點。";
+                alertBox.querySelector('p').innerHTML = "注意！預計總成本已<strong>超出總資金規模</strong>。建議改用槓桿衍生品或重新精算停損點。";
             } else if (capPercent > 60) {
                 alertBox.className = "mt-6 p-4 rounded-xl border flex items-start gap-3 bg-amber-500/10 border-amber-500/30 transition-colors duration-300";
                 alertBox.querySelector('h5').className = "font-bold text-amber-500 mb-1 text-sm";
@@ -1081,7 +1122,6 @@
             }
         }
 
-        // ==================== TAB 3: LOCAL STORAGE 存檔 ====================
         function renderWatchlist() {
             const list = JSON.parse(localStorage.getItem('fib_watchlist')) || [];
             const tbody = document.getElementById('watchlistBody');
@@ -1126,7 +1166,8 @@
         }
 
         function saveToWatchlist() {
-            const name = document.getElementById('watchName').value.trim();
+            // 使用目前輸入框的值
+            let name = document.getElementById('watchName').value.trim();
             const memo = document.getElementById('watchMemo').value.trim();
 
             if (!name) {
@@ -1143,19 +1184,29 @@
             });
             localStorage.setItem('fib_watchlist', JSON.stringify(list));
             
-            document.getElementById('watchName').value = '';
-            document.getElementById('watchMemo').value = '';
+            // 儲存後不清空，方便連續儲存或修改備註
             renderWatchlist();
-            showNotification(`💾 已儲存「${name}」`);
+            
+            // 自動切換到存檔分頁，讓使用者看到儲存成功
+            switchTab('watchlist');
+            showNotification(`💾 已儲存「${name}」波段`);
         }
 
         function loadFromWatchlist(id) {
             const list = JSON.parse(localStorage.getItem('fib_watchlist')) || [];
             const target = list.find(item => item.id === id);
             if (target) {
-                priceHigh = target.high; priceLow = target.low; currentTrend = target.trend;
+                priceHigh = target.high; 
+                priceLow = target.low; 
+                currentTrend = target.trend;
+                
                 document.getElementById('inputHigh').value = priceHigh;
                 document.getElementById('inputLow').value = priceLow;
+                
+                // 載入時同步更新股票名稱
+                document.getElementById('stockNameInput').value = target.name;
+                updateStockNameDisplay();
+                
                 setTrend(currentTrend);
                 switchTab('terminal');
                 showNotification(`📬 已還原「${target.name}」`);
@@ -1169,7 +1220,6 @@
             renderWatchlist();
         }
 
-        // ==================== TAB 4: 黃金螺旋繪製 ====================
         function drawGoldenSpiral() {
             const svg = document.getElementById('spiralSvg');
             svg.innerHTML = '';
