@@ -120,7 +120,7 @@
             <div>
                 <h1 class="text-lg font-bold theme-text tracking-wide flex items-center gap-2">
                     斐波那契黃金終端
-                    <span class="text-xs bg-gold-500/10 text-gold-600 border border-gold-500/30 px-2 py-0.5 rounded-full font-mono">v4.0 PRO</span>
+                    <span class="text-xs bg-gold-500/10 text-gold-600 border border-gold-500/30 px-2 py-0.5 rounded-full font-mono">v5.0 PRO</span>
                 </h1>
                 <p class="text-xs theme-text-muted">專業股市黃金分割與智慧風控系統</p>
             </div>
@@ -194,7 +194,6 @@
                     </div>
 
                     <div class="space-y-4">
-                        <!-- 新增：股票代號/名稱輸入 -->
                         <div class="theme-input bg-opacity-50 p-3 rounded-xl border theme-border">
                             <label class="text-xs theme-text-muted block mb-1.5 font-medium">分析標的 (名稱與代號)</label>
                             <div class="relative">
@@ -233,20 +232,25 @@
 
                 <!-- 斐波那契黃金分割列表 -->
                 <div class="theme-card border theme-border rounded-2xl overflow-hidden shadow-lg light-shadow transition-colors duration-300">
-                    <div class="px-5 py-4 border-b theme-border flex justify-between items-center">
+                    <div class="px-5 py-4 border-b theme-border flex flex-wrap gap-3 justify-between items-center">
                         <h3 class="text-md font-bold theme-text flex items-center gap-2">
                             <i data-lucide="table-properties" class="text-gold-500 w-5 h-5"></i>
                             黃金分割點位分析
                         </h3>
-                        <span class="text-xs theme-text-muted font-mono font-medium">單位: TWD / USD</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="toggleExplainModal(true)" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-gold-500/10 text-gold-600 dark:text-gold-400 border border-gold-500/30 hover:bg-gold-500 hover:text-white transition-all duration-300">
+                                <i data-lucide="book-open-check" class="w-3.5 h-3.5"></i>
+                                <span>說明書歸檔</span>
+                            </button>
+                        </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
                             <thead class="theme-input bg-opacity-40 text-xs theme-text-muted uppercase tracking-wider">
                                 <tr>
-                                    <th class="py-3.5 px-4 font-semibold">比例</th>
-                                    <th class="py-3.5 px-4 font-semibold">理論價位</th>
-                                    <th class="py-3.5 px-4 font-semibold">實戰含意與策略</th>
+                                    <th class="py-3.5 px-4 font-semibold min-w-[100px]">比例</th>
+                                    <th class="py-3.5 px-4 font-semibold min-w-[100px]">理論價位</th>
+                                    <th class="py-3.5 px-4 font-semibold">實戰含意與策略 (一目了然)</th>
                                 </tr>
                             </thead>
                             <tbody id="terminalTableBody" class="divide-y divide-[var(--border-color)]">
@@ -263,7 +267,6 @@
                     <div class="flex flex-wrap gap-2 items-center justify-between mb-4">
                         <div class="flex items-center gap-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-gold-500 animate-ping"></span>
-                            <!-- 動態股票名稱標題 -->
                             <h4 class="font-bold theme-text text-md flex items-center gap-2">
                                 <span id="chartTitleStockName" class="text-gold-500">台積電 (2330)</span>
                                 <span class="text-sm font-normal theme-text-muted">動態交互 K 線圖</span>
@@ -411,7 +414,6 @@
                     </div>
 
                     <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
-                        <!-- 存檔名稱預設連動上方輸入的股票名稱 -->
                         <input type="text" id="watchName" placeholder="輸入股名/波段名" class="theme-input border theme-border theme-text text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-1 focus:ring-gold-500 flex-1 md:min-w-[200px]">
                         <input type="text" id="watchMemo" placeholder="選填備註" class="theme-input border theme-border theme-text text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-1 focus:ring-gold-500 flex-1 md:min-w-[140px]">
                         <button onclick="saveToWatchlist()" class="bg-gold-500 hover:bg-gold-600 text-white font-bold px-4 py-2 rounded-xl text-sm flex items-center justify-center gap-1.5 transition w-full md:w-auto shadow-md shadow-gold-500/20">
@@ -519,6 +521,45 @@
 
     </main>
 
+    <!-- ==================== 解析說明書 Modal (備用歸檔) ==================== -->
+    <div id="explainModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6 transition-opacity duration-300 opacity-0">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer" onclick="toggleExplainModal(false)"></div>
+        <div class="theme-card border theme-border rounded-2xl w-full max-w-2xl relative shadow-2xl flex flex-col max-h-[90vh] sm:max-h-[85vh] transform transition-transform duration-300 scale-95 origin-center">
+            <div class="p-5 border-b theme-border flex justify-between items-center sticky top-0 theme-card rounded-t-2xl z-10">
+                <h3 class="text-lg font-bold theme-text flex items-center gap-2">
+                    <i data-lucide="book-open" class="text-gold-500 w-5 h-5"></i>
+                    最重要的五個位置解析說明書
+                </h3>
+                <button onclick="toggleExplainModal(false)" class="p-1 theme-text-muted hover:text-red-500 transition bg-transparent border-none outline-none">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <div class="p-5 overflow-y-auto space-y-4 theme-bg rounded-b-2xl">
+                <div class="theme-card p-4 rounded-xl border theme-border shadow-sm">
+                    <h4 class="text-md font-bold text-gold-500 mb-2 flex items-center gap-2"><span>⭐️</span> 0.236（極強勢測試）</h4>
+                    <p class="text-sm theme-text-muted leading-relaxed font-medium"><strong class="theme-text">實戰補充：</strong>在強勢多頭趨勢中，這裡其實是「極強勢支撐」。如果股價回檔極淺，只碰到 0.236 就跌不下去，代表買盤極度積極。圖中稱為「壓力點」，可能是指主力在極淺層的回檔中，測試上方是否有沉重的拋壓；只要測試無壓，隨時會再發動突破。</p>
+                </div>
+                <div class="theme-card p-4 rounded-xl border theme-border shadow-sm">
+                    <h4 class="text-md font-bold text-gold-500 mb-2 flex items-center gap-2"><span>⭐️</span> 0.382（強勢支撐）</h4>
+                    <p class="text-sm theme-text-muted leading-relaxed font-medium"><strong class="theme-text">實戰補充：</strong>這是教科書與實戰中最常見的健康回檔位置。只要股價能穩穩守住 0.382，整體的波段多頭格局就完好無缺，趨勢延續的機率極高。</p>
+                </div>
+                <div class="theme-card p-4 rounded-xl border theme-border shadow-sm">
+                    <h4 class="text-md font-bold text-gold-500 mb-2 flex items-center gap-2"><span>⭐️</span> 0.500（洗盤區）</h4>
+                    <p class="text-sm theme-text-muted leading-relaxed font-medium"><strong class="theme-text">實戰補充：</strong>雖然 0.5 不是純粹的斐波那契數列，但它符合道氏理論的 50% 回調概念。當股價回吐一半的漲幅時，最容易讓散戶產生「趨勢是不是要反轉了？」的恐慌心理，因此是主力絕佳的洗盤區。若在此處量縮止跌企穩，確實是不錯的波段加碼點。</p>
+                </div>
+                <div class="theme-card p-4 rounded-xl border theme-border shadow-sm">
+                    <h4 class="text-md font-bold text-gold-500 mb-2 flex items-center gap-2"><span>⭐️</span> 0.618（黃金支撐 / 第一止損）</h4>
+                    <p class="text-sm theme-text-muted leading-relaxed font-medium"><strong class="theme-text">實戰補充：</strong>這點的邏輯非常精確。0.618 往往是波段的多空分水嶺，一旦有效跌破，意味著原本的「上漲慣性」已被破壞，可能轉為弱勢震盪甚至走空。將這裡設定為第一停損點，是保護本金的重要紀律。</p>
+                </div>
+                <div class="theme-card p-4 rounded-xl border theme-border shadow-sm">
+                    <h4 class="text-md font-bold text-gold-500 mb-2 flex items-center gap-2"><span>⭐️</span> 0.786（生命線 / 最終止損）</h4>
+                    <p class="text-sm theme-text-muted leading-relaxed font-medium"><strong class="theme-text">實戰補充：</strong>如果回撤深達 0.786，代表這波上漲的利潤幾乎被吐光，已經屬於深度回調的弱勢格局。如果連這條最後防線都失守，通常代表主力已經棄守，波段多單必須無條件離場。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 浮動通知 (Toast) -->
     <div id="toast" class="toast fixed bottom-6 right-6 z-50 theme-card border border-gold-500/50 text-gold-500 px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2 text-sm font-bold">
         <i data-lucide="check-circle" class="w-5 h-5"></i>
@@ -531,20 +572,21 @@
         let colorScheme = 'asia';  
         let isLightMode = false; 
         
-        // 新增：儲存目前標的名稱
         let currentStockName = "台積電 (2330)"; 
         
         let priceHigh = 1000;
         let priceLow = 700;
         let calculatedDataCache = []; 
 
+        // ★ 更新：將詳細的「實戰補充」說明，直接整合到 desc 欄位中供表格與戰報直接調用
         const fibRatios = [
-            { val: 0.000, label: '0.0%', desc: '波段最高點，多頭修正的起跑線', isKey: false },
-            { val: 0.236, label: '23.6%', desc: '極強勢股淺幅修正，通常當日消化賣壓', isKey: false },
-            { val: 0.382, label: '38.2%', desc: '強勢股波段回調區，極具參考價值的買點', isKey: true },
-            { val: 0.500, label: '50.0%', desc: '整數與多空心理防禦線，多頭支撐帶', isKey: false },
-            { val: 0.618, label: '61.8%', desc: '極限防禦區，跌破此線代表波段多頭告終', isKey: true },
-            { val: 1.000, label: '100%', desc: '波段起漲點，若跌回此處將進入箱型整理', isKey: false }
+            { val: 0.000, label: '0.0%', desc: '波段最高點，多頭修正的起跑線。', isKey: false },
+            { val: 0.236, label: '23.6%', desc: '<strong class="theme-text">極強勢測試：</strong>在強勢多頭趨勢中，這裡其實是「極強勢支撐」。如果股價回檔極淺，只碰到 0.236 就跌不下去，代表買盤極度積極。可能代表主力在極淺層的回檔中，測試上方是否有沉重的拋壓；只要測試無壓，隨時會再發動突破。', isKey: false },
+            { val: 0.382, label: '38.2%', desc: '<strong class="theme-text">強勢支撐：</strong>這是教科書與實戰中最常見的健康回檔位置。只要股價能穩穩守住 0.382，整體的波段多頭格局就完好無缺，趨勢延續的機率極高。', isKey: true },
+            { val: 0.500, label: '50.0%', desc: '<strong class="theme-text">洗盤區：</strong>雖然 0.5 不是純粹的斐波那契數列，但它符合道氏理論的 50% 回調概念。當股價回吐一半的漲幅時，最容易讓散戶產生「趨勢是不是要反轉了？」的恐慌心理，因此是主力絕佳的洗盤區。若在此處量縮止跌企穩，確實是不錯的波段加碼點。', isKey: false },
+            { val: 0.618, label: '61.8%', desc: '<strong class="theme-text">黃金支撐 / 第一止損：</strong>這點的邏輯非常精確。0.618 往往是波段的多空分水嶺，一旦有效跌破，意味著原本的「上漲慣性」已被破壞，可能轉為弱勢震盪甚至走空。將這裡設定為第一停損點，是保護本金的重要紀律。', isKey: true },
+            { val: 0.786, label: '78.6%', desc: '<strong class="theme-text">生命線 / 最終止損：</strong>如果回撤深達 0.786，代表這波上漲的利潤幾乎被吐光，已經屬於深度回調的弱勢格局。如果連這條最後防線都失守，通常代表主力已經棄守，波段多單必須無條件離場。', isKey: false },
+            { val: 1.000, label: '100%', desc: '波段起漲點，若跌回此處將進入箱型整理。', isKey: false }
         ];
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -561,38 +603,52 @@
                 localStorage.setItem('fib_watchlist', JSON.stringify(sampleList));
             }
 
-            // 初始化時連動存檔名稱
             updateStockNameDisplay();
-            
             calculate();
             drawGoldenSpiral();
             renderWatchlist();
             setupInteractiveDrag();
         });
 
-        // ==================== 股票名稱更新與連動 ====================
+        function toggleExplainModal(show) {
+            const modal = document.getElementById('explainModal');
+            const innerCard = modal.querySelector('.max-w-2xl');
+            
+            if (show) {
+                modal.classList.remove('hidden');
+                void modal.offsetWidth; 
+                modal.classList.add('opacity-100');
+                modal.classList.remove('opacity-0');
+                innerCard.classList.add('scale-100');
+                innerCard.classList.remove('scale-95');
+            } else {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0');
+                innerCard.classList.remove('scale-100');
+                innerCard.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+        }
+
         function updateStockNameDisplay() {
             const inputVal = document.getElementById('stockNameInput').value.trim();
             currentStockName = inputVal || "未命名標的";
             
-            // 更新圖表標題
             document.getElementById('chartTitleStockName').innerText = currentStockName;
             
-            // 自動帶入到「我的存檔」的預設名稱中
             const watchNameInput = document.getElementById('watchName');
-            // 如果存檔名稱目前是空的，或者與上一次的標的名稱相同，就自動更新它
             if (!watchNameInput.value || watchNameInput.dataset.autoSynced === 'true') {
                 watchNameInput.value = currentStockName;
                 watchNameInput.dataset.autoSynced = 'true';
             }
         }
         
-        // 監聽存檔名稱手動修改，取消自動同步
         document.getElementById('watchName').addEventListener('input', function() {
             this.dataset.autoSynced = 'false';
         });
 
-        // 格式化日期時間
         function getFormattedDateTime() {
             const now = new Date();
             const year = now.getFullYear();
@@ -606,7 +662,7 @@
             return `${year}.${month}.${date}（${dayName}）${hours}：${minutes}`;
         }
 
-        // ==================== 複製戰報功能 (含股票名稱) ====================
+        // ==================== ★ 複製戰報功能 (含深度解析) ====================
         function copyReport() {
             const btn = document.getElementById('copyBtn');
             const directionText = currentTrend === 'bull' ? '📈 多頭回檔 (找支撐)' : '📉 空頭反彈 (找壓力)';
@@ -621,14 +677,23 @@
             reportText += `🔻 波段低點：${priceLow.toFixed(2)}\n`;
             reportText += `📏 波段空間：${diff}\n`;
             reportText += `------------------------\n`;
-            reportText += `🎯 關鍵點位分析：\n`;
+            reportText += `🎯 關鍵點位深度解析：\n\n`;
 
             calculatedDataCache.forEach(item => {
                 const icon = item.isKey ? '⭐ ' : '🔸 ';
-                reportText += `${icon}${item.label.padEnd(6, ' ')} : ${item.price.toFixed(2)}\n`;
+                // 替換掉 HTML tag，確保文字戰報乾淨
+                const cleanDesc = item.desc.replace(/<[^>]*>?/gm, ''); 
+                
+                reportText += `${icon}${item.label.padEnd(6, ' ')} [價位: ${item.price.toFixed(2)}]\n`;
+                // 如果有詳細描述，換行縮排加上去
+                if (cleanDesc && cleanDesc !== '') {
+                   reportText += `   └ 📝 ${cleanDesc}\n\n`;
+                } else {
+                   reportText += `\n`;
+                }
             });
             reportText += `------------------------\n`;
-            reportText += `💡 備註：0.382為強勢買/賣點，0.618為終極生死線。`;
+            reportText += `💡 策略提醒：嚴守紀律，確保盈虧比。本工具輔助參考，不構成投資建議。`;
 
             const textArea = document.createElement("textarea");
             textArea.value = reportText;
@@ -640,7 +705,7 @@
                 btn.classList.add('copy-active');
                 btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5"></i><span>已複製!</span>`;
                 lucide.createIcons();
-                showNotification("📋 戰報已成功複製到剪貼簿！");
+                showNotification("📋 深度戰報已成功複製到剪貼簿！");
                 
                 setTimeout(() => {
                     btn.classList.remove('copy-active');
@@ -757,7 +822,6 @@
             calculate();
         }
 
-        // ==================== 載入預設波段與名稱 ====================
         function applyPreset(stock) {
             if (!stock) return;
             
@@ -783,7 +847,7 @@
             document.getElementById('inputHigh').value = priceHigh;
             document.getElementById('inputLow').value = priceLow;
             
-            updateStockNameDisplay(); // 更新標題與存檔預設名稱
+            updateStockNameDisplay();
             setTrend(currentTrend);
             showNotification(`已套用 ${stockInput.value} 參數`);
         }
@@ -816,7 +880,7 @@
                     label: ratio.label,
                     price: targetPrice,
                     isKey: ratio.isKey,
-                    desc: ratio.desc
+                    desc: ratio.desc // 這裡裝的是帶 HTML tag 的新版超長解釋
                 };
                 calculatedDataCache.push(itemData); 
 
@@ -824,19 +888,20 @@
                 tr.className = `hover:bg-[var(--border-color)] transition-colors ${ratio.isKey ? (isLightMode ? 'bg-gold-50' : 'bg-gold-500/5') : ''}`;
                 
                 const highlightBadge = ratio.isKey 
-                    ? `<span class="bg-gold-100 text-gold-600 dark:bg-gold-500/20 dark:text-gold-400 border border-gold-400/50 text-[10px] px-1.5 py-0.5 rounded font-bold shadow-sm">黃金分割</span>`
-                    : `<span class="bg-[var(--input-color)] border border-[var(--border-color)] theme-text-muted text-[10px] px-1.5 py-0.5 rounded font-mono font-medium">${(ratio.val*100).toFixed(1)}%</span>`;
+                    ? `<span class="bg-gold-100 text-gold-600 dark:bg-gold-500/20 dark:text-gold-400 border border-gold-400/50 text-[10px] px-1.5 py-0.5 rounded font-bold shadow-sm inline-block min-w-max">黃金分割</span>`
+                    : `<span class="bg-[var(--input-color)] border border-[var(--border-color)] theme-text-muted text-[10px] px-1.5 py-0.5 rounded font-mono font-medium inline-block min-w-max">${(ratio.val*100).toFixed(1)}%</span>`;
 
                 const priceClass = ratio.isKey ? 'text-gold-600 dark:text-gold-400 text-md' : 'theme-text';
                 
+                // ★ 更新：將原本在手機端隱藏的屬性拿掉，讓解說在表格直接顯示，文字加長，所以排版放寬
                 tr.innerHTML = `
-                    <td class="py-3 px-4 font-semibold theme-text flex items-center gap-1.5 h-12">
+                    <td class="py-3 px-3 sm:px-4 font-semibold theme-text align-top pt-4">
                         ${highlightBadge}
                     </td>
-                    <td class="py-3 px-4 font-mono font-black ${priceClass}">
+                    <td class="py-3 px-3 sm:px-4 font-mono font-black align-top pt-4 ${priceClass}">
                         ${targetPrice.toFixed(2)}
                     </td>
-                    <td class="py-3 px-4 text-xs theme-text-muted leading-relaxed font-medium">
+                    <td class="py-3 px-3 sm:px-4 text-xs theme-text-muted leading-relaxed">
                         ${ratio.desc}
                     </td>
                 `;
@@ -941,7 +1006,7 @@
                 }
 
                 const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                text.setAttribute('x', width - 130); text.setAttribute('y', y - 6);
+                text.setAttribute('x', width - 110); text.setAttribute('y', y - 6);
                 text.setAttribute('fill', lvl.isKey ? keyColor : textColor);
                 text.setAttribute('font-size', '11'); text.setAttribute('font-family', 'monospace');
                 text.setAttribute('font-weight', lvl.isKey ? 'bold' : 'normal');
@@ -1016,7 +1081,7 @@
             slG.innerHTML = ''; tpG.innerHTML = '';
 
             levels.forEach(lvl => {
-                if (lvl.ratio === 0.382 || lvl.ratio === 0.618 || lvl.ratio === 0.5 || lvl.ratio === 1.0) {
+                if (lvl.ratio === 0.382 || lvl.ratio === 0.618 || lvl.ratio === 0.5 || lvl.ratio === 0.786) {
                     const btnSl = document.createElement('button');
                     btnSl.className = "theme-bg hover:bg-[var(--border-color)] border theme-border text-[11px] py-1.5 rounded theme-text font-mono font-bold transition-colors";
                     btnSl.innerText = `${(lvl.ratio*100).toFixed(1)}%`;
@@ -1166,7 +1231,6 @@
         }
 
         function saveToWatchlist() {
-            // 使用目前輸入框的值
             let name = document.getElementById('watchName').value.trim();
             const memo = document.getElementById('watchMemo').value.trim();
 
@@ -1184,10 +1248,7 @@
             });
             localStorage.setItem('fib_watchlist', JSON.stringify(list));
             
-            // 儲存後不清空，方便連續儲存或修改備註
             renderWatchlist();
-            
-            // 自動切換到存檔分頁，讓使用者看到儲存成功
             switchTab('watchlist');
             showNotification(`💾 已儲存「${name}」波段`);
         }
@@ -1203,7 +1264,6 @@
                 document.getElementById('inputHigh').value = priceHigh;
                 document.getElementById('inputLow').value = priceLow;
                 
-                // 載入時同步更新股票名稱
                 document.getElementById('stockNameInput').value = target.name;
                 updateStockNameDisplay();
                 
